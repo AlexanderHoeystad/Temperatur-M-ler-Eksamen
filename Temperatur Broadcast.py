@@ -20,10 +20,10 @@ clientSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 # Loop til at sende temperaturdata
 try:
     while True:
-        # Får temperaturen fra Sense HAT
+        # Get temperaturen fra Sense HAT
         temperature = get_temperature()
 
-        # Får nuværende tid
+        # Get current time
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # Sender temperaturdata i JSON format
@@ -38,7 +38,7 @@ try:
         # Sender JSON data over til UDP broadcast
         clientSocket.sendto(jsonData.encode(), (serverName, serverPort))
 
-        # Hvor lang tid den venter med at sende næste broadcast
+        # Hvor lang tid den venter med at sende next broadcast
         sleep(5)
 
 except KeyboardInterrupt:
