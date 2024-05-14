@@ -1,8 +1,14 @@
 from socket import *
 import requests
+from time import sleep
+import json
+import datetime
 
 serverPort = 10100
 serverSocket = socket(AF_INET, SOCK_DGRAM)
+
+api_key = "29501236f4854c099e1104709240405"  # API KEY from WeatherAPI
+location = "Roskilde"  # Location name
 
 serverAddress = ('', serverPort)
 
@@ -11,37 +17,35 @@ headersArray = {'Content-Type': 'application/json'}
 
 serverSocket.bind(serverAddress)
 print("The server is ready")
+
+def fetch_weather(api_key, location):
+    base_url = "http://api.weatherapi.com/v1/current.json"
+    params = {"key": api_key, "q": location, "aqi": "no"}
+    response = requests.get(base_url, params=params)
+    data = response.json()
+    return data
+
 while True:
     message, clientAddress = serverSocket.recvfrom(2048)
-    print("Received message:" + message.decode())
-    requests.post(api_address, data=message, headers=headersArray)
-
-#Funkction to process data and send it to the API
-def process_data(data):
-    try:
-        json_data = json.loads(data.decode())
-        response = requests.post(api_address, data=json_data, headers=headersArray)
-        if response.status_code == 200:
-            return "Data sent successfully"
-        else:
-            print("Error sending data to API")
-
-    except Exception as e:
-        print("Error processing data")
-        print()
-
-#Function for UDP receivers to receive data, for different ports
-def receive_data():
-    ports = [10100, 10101]
-    threads = []
-
-    for port in ports:
-        thread = threading.Thread(target=receive_data_thread, args=(port,))
-        thread.start()
-        threads.append(thread)
-
-    for thread in threads:
-        thread.join()
+    weatherData = fetch_weather(api_key, location)
     
-if __name__ == "__main__":
-    receive_data()
+    # Extract indoor temperature from the received JSON message
+    indoor_temperature = json.loads(message.decode())["Temperature"]
+    
+    # Generate a new timestamp for each entry
+    current_time = datetime.datetime.now()
+    formatted_date = current_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    combinedData = {
+        "id": "0",
+        "outDoorTemperature": weatherData['current']['temp_c'],
+        "inDoorTemperature": indoor_temperature,
+        # "date": formatted_date
+        "date": "2023-01-05T02:12:11"
+    }
+    
+    json_data = json.dumps(combinedData)
+    print("Received message: " + message.decode())
+    requests.post(api_address, data=json_data, headers=headersArray)
+    sleep(5)
+    print("Data sent: " + json_data)
