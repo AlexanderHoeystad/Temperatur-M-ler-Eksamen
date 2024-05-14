@@ -34,14 +34,14 @@ while True:
     
     # Generate a new timestamp for each entry
     current_time = datetime.datetime.now()
-    formatted_date = current_time.strftime('%Y-%m-%d %H:%M:%S')
+    formatted_date = current_time.strftime('%Y-%m-%dT%H:%M:%S')
 
     combinedData = {
         "id": "0",
         "outDoorTemperature": weatherData['current']['temp_c'],
         "inDoorTemperature": indoor_temperature,
-        # "date": formatted_date
-        "date": "2023-01-05T02:12:11"
+        "date": formatted_date
+        # "date": "2023-01-05T02:12:11"
     }
     
     json_data = json.dumps(combinedData)
