@@ -34,18 +34,21 @@ while True:
     
     # Generate a new timestamp for each entry
     current_time = datetime.datetime.now()
-    formatted_date = current_time.strftime('%Y-%m-%dT%H:%M:%S')
+    # formatted_date = current_time.strftime('%Y-%m-%dT%H:%M:%S')
 
     combinedData = {
         "id": "0",
         "outDoorTemperature": weatherData['current']['temp_c'],
         "inDoorTemperature": indoor_temperature,
-        "date": formatted_date
+        "date": current_time.strftime('%Y-%m-%dT%H:%M:%S')
         # "date": "2023-01-05T02:12:11"
     }
     
     json_data = json.dumps(combinedData)
-    print("Received message: " + message.decode())
-    requests.post(api_address, data=json_data, headers=headersArray)
+    print("Received inDoorTemperature: " + message.decode())
+    print("Received outDoorTemperature: " + str(weatherData['current']['temp_c']))
+    response = requests.post(api_address, data=json_data, headers=headersArray)
+    print(response.status_code)
+    print(response.text)
     sleep(5)
     print("Data sent: " + json_data)
