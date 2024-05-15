@@ -2,7 +2,6 @@ from sense_hat import SenseHat
 import json
 from socket import *
 from time import sleep, time
-from datetime import datetime
 
 sense = SenseHat()
 
@@ -23,13 +22,9 @@ try:
         # Get temperaturen fra Sense HAT
         temperature = get_temperature()
 
-        # Get current time
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
         # Sender temperaturdata i JSON format
         temperatureData = {
             "Temperature": temperature,
-            "Timestamp": current_time
         }
         
         # Konverterer data til JSON
@@ -39,7 +34,7 @@ try:
         clientSocket.sendto(jsonData.encode(), (serverName, serverPort))
 
         # Hvor lang tid den venter med at sende next broadcast
-        sleep(5)
+        sleep(900)
 
 except KeyboardInterrupt:
     pass
