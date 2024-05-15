@@ -50,5 +50,5 @@ while True:
     response = requests.post(api_address, data=json_data, headers=headersArray)
     print(response.status_code)
     print(response.text)
-    sleep(5)
+    sleep(900)
     print("Data sent: " + json_data)
