@@ -34,7 +34,7 @@ try:
         clientSocket.sendto(jsonData.encode(), (serverName, serverPort))
 
         # Hvor lang tid den venter med at sende next broadcast
-        sleep(900)
+        sleep(60)
 
 except KeyboardInterrupt:
     pass
