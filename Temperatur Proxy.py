@@ -4,7 +4,7 @@ from time import sleep
 import json
 import datetime
 
-serverPort = 10100
+serverPort = 10101
 serverSocket = socket(AF_INET, SOCK_DGRAM)
 
 api_key = "29501236f4854c099e1104709240405"  # API KEY from WeatherAPI

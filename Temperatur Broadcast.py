@@ -31,10 +31,12 @@ try:
         jsonData = json.dumps(temperatureData)
 
         # Sender JSON data over til UDP broadcast
-        clientSocket.sendto(jsonData.encode(), (serverName, serverPort))
+        response = clientSocket.sendto(jsonData.encode(), (serverName, serverPort))
+        print(response.status_code)
+        print(response.text)
 
         # Hvor lang tid den venter med at sende next broadcast
-        sleep(900)
+        sleep(60)
 
 except KeyboardInterrupt:
     pass
