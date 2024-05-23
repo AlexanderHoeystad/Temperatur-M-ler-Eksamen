@@ -17,23 +17,25 @@ clientSocket = socket(AF_INET, SOCK_DGRAM)
 clientSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
 try:
+    # Loop til at sende temperaturdata
     while True:
-        # Get temperature from Sense HAT
+        # Get temperaturen fra Sense HAT
         temperature = get_temperature()
 
-        # Send temperature data in JSON format
+        # Sender temperaturdata i JSON format
         temperatureData = {
             "Temperature": temperature,
         }
         
-        # Convert data to JSON
+        # Konverterer data til JSON
         jsonData = json.dumps(temperatureData)
 
-        # Send JSON data over UDP broadcast
+        # Sender JSON data over til UDP broadcast
         clientSocket.sendto(jsonData.encode(), (serverName, serverPort))
 
-        # Wait before sending the next broadcast
+        # Hvor lang tid den venter med at sende next broadcast
         sleep(60)
 
-except KeyboardInterrupt:
-    pass
+finally:
+    clientSocket.close()
+    print("Socket closed.")
